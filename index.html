@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NLP and Word Prediction</title>
+  <meta charset="utf-8">
+  <meta name="description" content="NLP and Word Prediction">
+  <meta name="author" content="Jim White">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>NLP and Word Prediction</h1>
+    <h2>Using Ngrams and Markovian Processes</h2>
+    <p>Jim White<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Word Prediction Project Description</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>The purpose of this project was to develop a word prediction model based on a large corpus of text which included twitter, news, and blog data.</li>
+<li>Word prediction can save time when entering text into mobile devices. An example of this is the SwiftKey app available for iphone,ipads, and android devices. More information about SwiftKey apps can be found by using link below.</li>
+<li>The project included the following steps: 1) exploratory analysis of the data, 2) acquiring understanding of natural language processing and text mining, 3) building a predictive model, and 4) the creation of a Shiny app that takes a multiword phrase and predcits the next word.</li>
+</ol>
+
+<p>The following resources were valuable to understanding the problem and process:
+1. <a href="http://www.sparsey.com/domain-specific-word-prediction.pdf">Domain Specific Word prediction</a> 2. <a href="http://www.modsimworld.org/papers/2015/Natural_Language_Processing.pdf">A Model to Predict a Sequence of Words</a> and 3. <a href="http://stp.lingfil.uu.se/%7Esantinim/ml/2014/JurafskyMartinSpeechAndLanguageProcessing2ed_draft%202007.pdf">Speech and Language Processing</a> by Jurafsky &amp; Martin   </p>
+
+<p>Link to SwiftKey website: <a href="https://swiftkey.com/en">SwiftKey</a>
+Link to App: <a href="https://jdwhite-datascience.shinyapps.io/Capstone_Project/">Capstone Project - Word Prediction</a><br/></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Understanding and Cleaning the Text Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The amount of data from the text files was significant as indicated in this figure <br/>
+<b>Figure1: Data File Characteristics</b> <br/>
+<img src="figures/original_data.png" alt="Data Files"><br/></p>
+
+<p>An examination of word frequencies by text type was conducted along with sparse word analysis. The results can be found <a href="http://rpubs.com/jwhite1949/163553">here</a></p>
+
+<p>One conclusion from the exploratory analysis was that cleaning of the data would be critical to to the process of developing a model. While some R libraries provide functions to accomplish this, a good understanding of regular expressions and R regex functions were used to manually do the data cleaning.</p>
+
+<p>A helpful website related to R and the use of regular expressions can be found at Li &amp; Bryan&#39;s <a href="http://stat545.com/block022_regular-expression.html">Regular Expressions in R</a> webpage.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Building the Prediction Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>AFter exploring the literature related to NLP, the approach to building the model was to use <a href="https://en.wikipedia.org/wiki/N-gram">ngrams</a>, a <a href="https://en.wikipedia.org/wiki/Markov_chain">Markovian chain model</a>, and ideas related to the <a href="https://en.wikipedia.org/wiki/Katz%27s_back-off_model">Katz backoff model</a>.</p>
+
+<p>The Ngrams were generated using the <a href="https://cran.r-project.org/web/packages/quanteda/vignettes/quickstart.html">quanteda library</a>, and where n=2 (bigram) and n=3 (trigram).</p>
+
+<p>The Markovian models used were for Bigram <img src="figures/markov1.png" alt="bigram"> and Trigram <img src="figures/markov2.png" alt="trigram"></p>
+
+<p>The P&#39;s can be translated to mean counts (or frequencies) and likelihood can then be calcaulted and standardized. This process was used to create three separate models for each context (blogs, news, and twitter). This was done becuase the likelihood of word prediction is certainly dependent upon domain.</p>
+
+<p>The models were updated by eliminating those bigrams or trigrams which had a frequency of one. In large datasets, frequencies of one are almost zero and may not be relevant for word prediction.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>The Word Prediction Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The Word Prediction app is available <a href="https://jdwhite-datascience.shinyapps.io/Capstone_Project/">here</a>. To use the app, first select a context (news, twitter, or news), then enters a string of words into the &#39;Enter phrase here&#39; box and click on the Submit button. </p>
+
+<div style='float:left;width:30%;'>
+  After clicking on the Submit button you get a table with the predicted words from either the bigram or trigram models or both.<br/><br/> The app can be reset choosing <em>Select Content Type</em> from the drop-down box in the left panel.  
+</div>
+
+<div style='float:right;width:70%;'>
+  <img src="figures/theapp.png">
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Word Prediction Project Description'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Understanding and Cleaning the Text Data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Building the Prediction Model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='The Word Prediction Model'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='NA'>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
